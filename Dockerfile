@@ -1,9 +1,12 @@
 FROM golang:1.11-buster
-MAINTAINER "Lukas Martinelli <me@lukasmartinelli.ch>"
+MAINTAINER "Yuri Astrakhan <YuriAstrakhan@gmail.com>"
 
 ENV PG_MAJOR 11
+ENV IMPOSM_VERSION 0.8.1
+
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
- # install newer packages from backports 
+ # install newer packages from backports
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       libgeos-dev \
       libleveldb-dev \
@@ -16,9 +19,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
  && ln -s /usr/lib/libgeos_c.so /usr/lib/libgeos.so \
  && rm -rf /var/lib/apt/lists/*
 
-ENV IMPOSM_VERSION 0.8.1
-
- # add  github.com/julien-noblet/download-geofabrik
+# add  github.com/julien-noblet/download-geofabrik
 RUN go get github.com/julien-noblet/download-geofabrik \
  && go install github.com/julien-noblet/download-geofabrik \
  && download-geofabrik generate \
