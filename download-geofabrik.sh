@@ -20,6 +20,9 @@ rm -f *.yml
 
 download-geofabrik generate
 download-geofabrik -v download $AREA
+download-geofabrik -s download $AREA
+
+mv ${AREA}.state last.state.txt
 
 ls *.osm.pbf  -la
 osmconvert  --out-statistics  "${AREA}.osm.pbf"  > ./osmstat.txt
