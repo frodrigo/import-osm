@@ -13,18 +13,18 @@ fi
 AREA=$1
 DOCKER_COMPOSE_FILE=./docker-compose-config.yml
 
-rm -f *.osm.pbf
-rm -f *.mbtiles
-rm -f *.txt
-rm -f *.yml
+rm -f ./*.osm.pbf
+rm -f ./*.mbtiles
+rm -f ./*.txt
+rm -f ./*.yml
 
-download-geofabrik generate
-download-geofabrik -v download $AREA
-download-geofabrik -s download $AREA
+download-geofabrik --verbose generate
+download-geofabrik --verbose download --state "$AREA"
+download-geofabrik --verbose download "$AREA"
 
-mv ${AREA}.state last.state.txt
+mv "${AREA}.state" last.state.txt
 
-ls *.osm.pbf  -la
+ls ./*.osm.pbf -la
 osmconvert  --out-statistics  "${AREA}.osm.pbf"  > ./osmstat.txt
 
 lon_min=$( cat osmstat.txt | grep "lon min:" | cut -d":" -f 2 )
