@@ -1,24 +1,25 @@
 #!/bin/bash
 
-#  Start pgclimb command !   
+#  Start pgclimb command !
 set -o errexit
 set -o pipefail
 set -o nounset
 
-max_tries=40
-tries=0
-while ! pg_isready -q -d $POSTGRES_DB -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER
-do
-    tries=$((tries + 1))
-    if [ $tries -gt $max_tries ]; then
-        echo "... Gave up , No connections with :  pg_isready -d $POSTGRES_DB -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER  "
-        exit 1  
-    fi    
-    sleep 2
-done
+# wait for Postgres. On error, this script will exit too
+source ./pgwait.sh
 
-pgclimb --password "$POSTGRES_PASSWORD" \
-        --host "$POSTGRES_HOST" \
-        --port "$POSTGRES_PORT" \
-        --dbname="$POSTGRES_DB" \
-        --username="$POSTGRES_USER"  "$@"
+# For backward compatibility, allow both PG* and POSTGRES_* forms,
+# with the non-standard POSTGRES_* form taking precedence.
+# An error will be raised if neither form is given, except for the PGPORT
+export PGHOST="${POSTGRES_HOST:-${PGHOST?}}"
+export PGDATABASE="${POSTGRES_DB:-${PGDATABASE?}}"
+export PGUSER="${POSTGRES_USER:-${PGUSER?}}"
+export PGPASSWORD="${POSTGRES_PASSWORD:-${PGPASSWORD?}}"
+export PGPORT="${POSTGRES_PORT:-${PGPORT:-5432}}"
+
+pgclimb --password "$PGPASSWORD" \
+        --host "$PGHOST" \
+        --port "$PGPORT" \
+        --dbname="$PGDATABASE" \
+        --username="$PGUSER" \
+        "$@"
