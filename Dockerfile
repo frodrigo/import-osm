@@ -1,9 +1,9 @@
 FROM golang:1.11-buster
 MAINTAINER "Yuri Astrakhan <YuriAstrakhan@gmail.com>"
 
-ENV PG_MAJOR 11
-ENV IMPOSM_VERSION 0.8.1
-
+ARG PG_MAJOR="11"
+ARG IMPOSM_REPO="https://github.com/omniscale/imposm3.git"
+ARG IMPOSM_VERSION="v0.8.1"
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
  # install newer packages from backports
@@ -33,10 +33,10 @@ RUN go get github.com/julien-noblet/download-geofabrik \
  # && git clone --quiet --depth 1 https://github.com/omniscale/imposm3 \
  #
  # update to current omniscale/imposm3
- && git clone --quiet --depth 1 https://github.com/omniscale/imposm3.git -b v$IMPOSM_VERSION \
+ && git clone --quiet --depth 1 $IMPOSM_REPO -b $IMPOSM_VERSION \
         $GOPATH/src/github.com/omniscale/imposm3 \
  && make build \
- && mv imposm /usr/bin/imposm \
+ && ( [ -f imposm ] && mv imposm /usr/bin/imposm || mv imposm3 /usr/bin/imposm ) \
  # clean
  && rm -rf $GOPATH/bin/godep \
  && rm -rf $GOPATH/src/ \

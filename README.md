@@ -41,3 +41,9 @@ such as `PGHOST`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`, `PGPORT`.  All are requi
 
 For backward compatibility the script also supports `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_USER`,
 `POSTGRES_PASSWORD`, and `POSTGRES_PORT`, but they are not recommended.
+
+### Legacy version
+An additional docker image with a `-legacy` tag will be published by hand.
+It contains custom [openmaptiles/imposm v2017-10-18](https://github.com/openmaptiles/imposm3/tree/v2017-10-18) version
+to stay compatible with legacy deployments. 
+
