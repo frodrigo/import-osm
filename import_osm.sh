@@ -34,7 +34,8 @@ function import_pbf() {
         -cachedir "$IMPOSM_CACHE_DIR" \
         -read "$pbf_file" \
         -deployproduction \
-        -write $diff_flag
+        -write $diff_flag \
+        -config "$CONFIG_JSON"
 }
 
 function import_osm_with_first_pbf() {
